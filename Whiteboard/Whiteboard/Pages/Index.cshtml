@@ -29,24 +29,47 @@
 {
     <script>
 
-        var connection = new signalR.HubConnectionBuilder()
+        var Connection = new SignalR.HubConnectionBuilder()
             .withUrl("/board").build();
 
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
-        });
+        connection.start()
+            .then(function () {
+                console.log("Connected to board");
 
-        connection.on("OnDrawingAsync", (x1, y1, x2, y2) => {
-            ctx.lineWidth = 5;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000000';
+                let x1 = 1;
+                let x2 = 2;
+                let y1 = 3;
+                let y1 = 4;
 
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-            ctx.closePath();
-        });
+                connection.invoke("SendDrawAction", x1, y1, x2, y2)
+                    .catch(function (err) {
+                        return (function (err) {
+                            return console.erroe(err.toString());
+                        })
+                    })
+
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+
+
+
+        // connection.start().catch(function (err) {
+        //     return console.error(err.toString());
+        // });
+
+        // connection.on("OnDrawingAsync", (x1, y1, x2, y2) => {
+        //     ctx.lineWidth = 5;
+        //     ctx.lineCap = 'round';
+        //     ctx.strokeStyle = '#000000';
+
+        //     ctx.beginPath();
+        //     ctx.moveTo(x1, y1);
+        //     ctx.lineTo(x2, y2);
+        //     ctx.stroke();
+        //     ctx.closePath();
+        // });
 
         const canvas = document.getElementById('whiteboard');
         const ctx = canvas.getContext('2d');
